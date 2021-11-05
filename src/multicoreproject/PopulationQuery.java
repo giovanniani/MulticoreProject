@@ -14,7 +14,7 @@ public class PopulationQuery {
 	
 	// parse the input file into a large array held in a CensusData object
 	public static CensusData parse(String filename) {
-		CensusData result = new CensusData();
+		CensusData result = new CensusData();                
 		
         try {
             BufferedReader fileIn = new BufferedReader(new FileReader(filename));
@@ -59,6 +59,28 @@ public class PopulationQuery {
 	// argument 3: number of y-dimension buckets
 	// argument 4: -v1, -v2, -v3, -v4, or -v5
 	public static void main(String[] args) {
-		System.out.println("Hello Suckers");
+            
+		System.out.println(args[1]);
+                CensusData c1 = parse(args[0]);
+                if(args[1].equals("-v1"))
+                {
+                    System.out.println("Running version 1");
+                }
+                if(args[1].equals("-v2"))
+                {
+                    System.out.println("Running version 2");
+                }
+                if(args[1].equals("-v3"))
+                {
+                    System.out.println("Running version 3");
+                }
+                if(args[1].equals("-v4"))
+                {
+                    System.out.println("Running version 4");
+                }
+                if(args[1].equals("-v5"))
+                {
+                    System.out.println("Running on version 5");
+                }
 	}
 }
