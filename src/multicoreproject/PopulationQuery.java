@@ -69,6 +69,7 @@ public class PopulationQuery {
                 if(args[1].equals("-v2"))
                 {
                     System.out.println("Running version 2");
+                    VersionObject version = new Version2(c1);
                 }
                 if(args[1].equals("-v3"))
                 {
