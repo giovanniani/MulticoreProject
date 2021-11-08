@@ -59,7 +59,7 @@ public class PopulationQuery {
 	// argument 3: number of y-dimension buckets
 	// argument 4: -v1, -v2, -v3, -v4, or -v5
 	public static void main(String[] args) {
-            
+		VersionObject version = null;
 		System.out.println(args[1]);
                 CensusData c1 = parse(args[0]);
                 if(args[1].equals("-v1"))
@@ -69,6 +69,7 @@ public class PopulationQuery {
                 if(args[1].equals("-v2"))
                 {
                     System.out.println("Running version 2");
+                    version = new Version2(c1);
                 }
                 if(args[1].equals("-v3"))
                 {
@@ -82,5 +83,7 @@ public class PopulationQuery {
                 {
                     System.out.println("Running on version 5");
                 }
+
+		// TODO: Eventually write query loop
 	}
 }
