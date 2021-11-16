@@ -62,6 +62,11 @@ public class PopulationQuery {
 		VersionObject version = null;
 		System.out.println(args[1]);
                 CensusData c1 = parse(args[0]);
+		QueryResult query = null;
+
+		int grid_x = 10;
+		int grid_y = 10;
+
                 if(args[1].equals("-v1"))
                 {
                     System.out.println("Running version 1");
@@ -70,7 +75,8 @@ public class PopulationQuery {
                 if(args[1].equals("-v2"))
                 {
                     System.out.println("Running version 2");
-                    version = new Version2(c1);
+                    version = new Version2(c1, grid_x, grid_y);
+		    query = version.query(1, 2, 8, 9);
                 }
                 if(args[1].equals("-v3"))
                 {
@@ -84,6 +90,9 @@ public class PopulationQuery {
                 {
                     System.out.println("Running on version 5");
                 }
+                System.out.println("population of rectangle: " + query.population);
+                System.out.println("percent of total population: "
+		    + query.percentage);
 
 		// TODO: Eventually write query loop
 	}
