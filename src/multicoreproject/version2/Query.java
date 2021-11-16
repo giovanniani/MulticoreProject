@@ -30,7 +30,6 @@ public class Query extends RecursiveTask<IntermediateResult> {
 		int count = 0;
 		int total = 0;
 		if ((_high - _low) <= THRESHOLD) {
-			System.out.println("Computing....");
 			for (int i = _low; i < _high; ++i) {
 				// Add up the count within the triangle
 				if (_data.data[i].latitude >= _min_lat
