@@ -4,6 +4,8 @@ package multicoreproject;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.Scanner; 
+
 
 public class PopulationQuery {
 	// next four constants are relevant to parsing
@@ -62,20 +64,26 @@ public class PopulationQuery {
 		VersionObject version = null;
 		System.out.println(args[1]);
                 CensusData c1 = parse(args[0]);
-		QueryResult query = null;
-
-		int grid_x = 10;
-		int grid_y = 10;
-
+		QueryResult query = null;               
+                System.out.println("Please give west, south, east, north coordinates of your query rectangle:\n>>");
+                Scanner userInput = new Scanner(System.in);
+                String gridInput = userInput.nextLine();  // Read user input
+                String[] gridValues = gridInput.split(" ", 4);
+                System.out.println(gridValues); //west, south, east, north 
+                int west = Integer.parseInt(gridValues[0]);
+                int south = Integer.parseInt(gridValues[1]);
+                int east = Integer.parseInt(gridValues[2]);
+                int north = Integer.parseInt(gridValues[3]);
                 if(args[1].equals("-v1"))
                 {
                     System.out.println("Running version 1");
                     version = new Version1(c1);
+                    query = version.query(west, south, east, north); //int min_long, int max_lat, int max_long, int min_lat
                 }
                 if(args[1].equals("-v2"))
                 {
                     System.out.println("Running version 2");
-                    version = new Version2(c1, grid_x, grid_y);
+                    version = new Version2(c1, west, south);
 		    query = version.query(1, 2, 8, 9);
                 }
                 if(args[1].equals("-v3"))
@@ -91,8 +99,7 @@ public class PopulationQuery {
                     System.out.println("Running on version 5");
                 }
                 System.out.println("population of rectangle: " + query.population);
-                System.out.println("percent of total population: "
-		    + query.percentage);
+                System.out.println("percent of total population: " + query.percentage);
 
 		// TODO: Eventually write query loop
 	}
