@@ -74,17 +74,19 @@ public class PopulationQuery {
                 int south = Integer.parseInt(gridValues[1]);
                 int east = Integer.parseInt(gridValues[2]);
                 int north = Integer.parseInt(gridValues[3]);
+                int xGrid = Integer.parseInt(args[2]);
+                int yGrid = Integer.parseInt(args[3]);                
                 if(args[1].equals("-v1"))
                 {
                     System.out.println("Running version 1");
-                    version = new Version1(c1);
+                    version = new Version1(c1, xGrid, yGrid);
                     query = version.query(west, south, east, north); //int min_long, int max_lat, int max_long, int min_lat
                 }
                 if(args[1].equals("-v2"))
                 {
                     System.out.println("Running version 2");
-                    version = new Version2(c1, west, south);
-		    query = version.query(1, 2, 8, 9);
+                    version = new Version2(c1, 100, 500);
+		    query = version.query(west, south, east, north);
                 }
                 if(args[1].equals("-v3"))
                 {

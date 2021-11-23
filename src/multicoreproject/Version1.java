@@ -5,60 +5,70 @@ import multicoreproject.version2.*;
  * @author Giova
  */
 public class Version1 extends VersionObject{
-    private CensusData _data;
-    private Boundary _boundaries;
+    private CensusData _data;    
     private Boundary _globalBoundaries;
+    private int _grid_x;
+    private int _grid_y;
     
-    public Version1(CensusData data) {
+    public Version1(CensusData data, int grid_x, int grid_y) {
 		_data = data;
-                
+                _grid_x = grid_x;
+		_grid_y = grid_y;                
 	}
 
-    public QueryResult query(int min_long, int max_lat, int max_long, int min_lat) {
-            // TODO
-            _globalBoundaries = new Boundary(0, 0, 0, 0);
-            QueryResult tempQuery = new QueryResult(0, 0);
-            findBoundaries();      
-            CensusGroup tempGroup;
-            /*if(_globalBoundaries.checkBoudnaries(min_lat, max_lat, min_long, max_long))
-            {*/
-                for(int block = 0; block < _data.data_size; block++)
-                {
-                    tempGroup = this._data.data[block];
-                    if(tempGroup.realLatitude >= min_lat && tempGroup.realLatitude <= max_lat)
-                    {
-                        if(tempGroup.longitude >= min_long && tempGroup.longitude <= max_long)
-                            tempQuery.population += tempGroup.population;                    
-                    }
-                }
-            //}
-            tempQuery.percentage = (tempQuery.population / (float)_globalBoundaries.population) * 100;
-            return tempQuery;
+    public QueryResult query(int min_long, int min_lat, int max_long, int max_lat) 
+    {
+        // TODO
+        _globalBoundaries = new Boundary(0, 0, 0, 0);
+        float newMaxLat, newMinLat, newMinLong, newMaxLong;
+        
+        
+        QueryResult tempQuery = new QueryResult(0, 0);
+        findBoundaries();      
+        //transforming ranges for search
+        newMinLat = convertRange(_globalBoundaries.minLatitude, _globalBoundaries.maxLatitude, _grid_y, min_lat);
+        newMaxLat = convertRange(_globalBoundaries.minLatitude, _globalBoundaries.maxLatitude, _grid_y, max_lat);
+        newMinLong = convertRange(_globalBoundaries.minLongitude, _globalBoundaries.maxLongitude, _grid_x, min_long);
+        newMaxLong = convertRange(_globalBoundaries.minLongitude, _globalBoundaries.maxLongitude, _grid_x, max_long);
+        //-----------
+        CensusGroup tempGroup;           
+        for(int block = 0; block < _data.data_size; block++)
+        {
+            tempGroup = this._data.data[block];
+            if(tempGroup.latitude >= newMinLat && tempGroup.latitude <= newMaxLat)
+            {
+                if(tempGroup.longitude >= newMinLong && tempGroup.longitude <= newMaxLong)
+                    tempQuery.population += tempGroup.population;                    
+            }
+        }
+        //}
+        tempQuery.percentage = (tempQuery.population / (float)_globalBoundaries.population) * 100;
+        return tempQuery;
 
     }
         
-    private Boundary findBoundaries()
+    private void findBoundaries()
     {
-        _globalBoundaries.maxLatitude = _globalBoundaries.minLatitude = _data.data[0].realLatitude;
+        _globalBoundaries.maxLatitude = _globalBoundaries.minLatitude = _data.data[0].latitude;
         _globalBoundaries.maxLongitude = _globalBoundaries.minLongitude = _data.data[0].longitude;
         for(int block = 0; block < _data.data_size; block++)
         {
-            if(_data.data[block].realLatitude < _globalBoundaries.minLatitude)
-                _globalBoundaries.minLatitude = _data.data[block].realLatitude;
-            if(_data.data[block].realLatitude > _globalBoundaries.maxLatitude)
-                _globalBoundaries.maxLatitude = _data.data[block].realLatitude;
+            _globalBoundaries.population += _data.data[block].population;
+            if(_data.data[block].latitude < _globalBoundaries.minLatitude)
+                    _globalBoundaries.minLatitude = _data.data[block].latitude;
+            if(_data.data[block].latitude > _globalBoundaries.maxLatitude)
+                _globalBoundaries.maxLatitude = _data.data[block].latitude;
             
             if(_data.data[block].longitude < _globalBoundaries.minLongitude)
-                _globalBoundaries.minLatitude = _data.data[block].longitude;
-            if(_data.data[block].longitude > _globalBoundaries.minLongitude)
                 _globalBoundaries.minLongitude = _data.data[block].longitude;
-            _globalBoundaries.population += _data.data[0].population;
+            if(_data.data[block].longitude > _globalBoundaries.minLongitude)
+                _globalBoundaries.maxLongitude = _data.data[block].longitude;            
         }
-        return null;
+    }    
+    
+    private float convertRange(float minRealRange, float maxRealRange, int newRange, int actualValue)
+    {
+        float newValue = (((maxRealRange - minRealRange) * actualValue) / newRange) + minRealRange;
+        return newValue;
     }
-        
-    
-    //private get
-        
-    
 }
