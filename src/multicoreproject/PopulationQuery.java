@@ -66,46 +66,70 @@ public class PopulationQuery {
                 CensusData c1 = parse(args[0]);
 
 		QueryResult query = null;               
-                System.out.println("Please give west, south, east, north coordinates of your query rectangle:\n>>");
-                Scanner userInput = new Scanner(System.in);
-                String gridInput = userInput.nextLine();  // Read user input
-                String[] gridValues = gridInput.split(" ", 4);
-                System.out.println(gridValues); //west, south, east, north 
-                int west = Integer.parseInt(gridValues[0]);
-                int south = Integer.parseInt(gridValues[1]);
-                int east = Integer.parseInt(gridValues[2]);
-                int north = Integer.parseInt(gridValues[3]);
                 int xGrid = Integer.parseInt(args[2]);
-                int yGrid = Integer.parseInt(args[3]);                
-
-                if(args[1].equals("-v1"))
+                int yGrid = Integer.parseInt(args[3]);  
+                boolean running = true;
+                int west = 0;
+                int east = 0;
+                int north = 0;
+                int south = 0;
+                while(running)
                 {
-                    System.out.println("Running version 1");
-                    version = new Version1(c1, xGrid, yGrid);
-                    query = version.query(west, south, east, north); //int min_long, int max_lat, int max_long, int min_lat
+                    System.out.println("Please give west, south, east, north coordinates of your query rectangle:\n>>");
+                    Scanner userInput = new Scanner(System.in);
+                    String gridInput = userInput.nextLine();  // Read user input
+                    String[] gridValues = gridInput.split(" ", 4);
+                    
+                    try
+                    {
+                        west = Integer.parseInt(gridValues[0]);
+                        south = Integer.parseInt(gridValues[1]);
+                        east = Integer.parseInt(gridValues[2]);
+                        north = Integer.parseInt(gridValues[3]);
+                    }
+                    catch(Exception e)
+                    {
+                        running = false;
+                    }
+                    if(running)
+                    {
+                        if(args[1].equals("-v1"))
+                        {
+                            System.out.println("Running version 1");
+                            version = new Version1(c1, xGrid, yGrid);
+                            query = version.query(west, south, east, north); //int min_long, int max_lat, int max_long, int min_lat
+                        }
+                        if(args[1].equals("-v2"))
+                        {
+                            System.out.println("Running version 2");
+                            version = new Version2(c1, xGrid, yGrid);
+                            query = version.query(west, south, east, north);
+                        }
+                        if(args[1].equals("-v3"))
+                        {
+                            System.out.println("Running version 3");
+                        }
+                        if(args[1].equals("-v4"))
+                        {
+                            System.out.println("Running version 4");
+                            version = new Version4(c1, xGrid, yGrid);
+                            query = version.query(1, 1, 100, 500);
+                        }
+                        if(args[1].equals("-v5"))
+                        {
+                            System.out.println("Running on version 5");
+                        }
+                    
+                        System.out.println("population of rectangle: " + query.population);
+                        System.out.println("percent of total population: " + query.percentage + "%");
+                    }
+                    else
+                    {
+                        System.out.println("Happy end of semester and \nMeery Christmas :D");
+                    }
+                    
                 }
-                if(args[1].equals("-v2"))
-                {
-                    System.out.println("Running version 2");
-                    version = new Version2(c1, xGrid, yGrid);
-		    query = version.query(west, south, east, north);
-                }
-                if(args[1].equals("-v3"))
-                {
-                    System.out.println("Running version 3");
-                }
-                if(args[1].equals("-v4"))
-                {
-                    System.out.println("Running version 4");
-		    version = new Version4(c1, xGrid, yGrid);
-		    query = version.query(1, 1, 100, 500);
-                }
-                if(args[1].equals("-v5"))
-                {
-                    System.out.println("Running on version 5");
-                }
-                System.out.println("population of rectangle: " + query.population);
-                System.out.println("percent of total population: " + query.percentage + "%");
+                
 
 		// TODO: Eventually write query loop
 	}
