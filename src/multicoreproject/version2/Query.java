@@ -57,14 +57,16 @@ public class Query extends RecursiveTask<IntermediateResult> {
 		return new IntermediateResult(count, total);
 	}
 
+	// TODO: Fix parameter order
 	public static QueryResult query(CensusData data, Boundary bounds, int grid_x, int grid_y, int min_x, int max_x, int min_y, int max_y) {
-		float grid_width = (bounds.maxLatitude - bounds.minLatitude) / ((float)grid_x);
-		float grid_height = (bounds.maxLongitude - bounds.minLongitude) / ((float)grid_y);
+		float cell_width = (bounds.maxLatitude - bounds.minLatitude) / ((float)grid_x);
+		float cell_height = (bounds.maxLongitude - bounds.minLongitude) / ((float)grid_y);
+		System.out.println(min_x + " " + max_x + " " + min_y + " " + max_y);
 		// Calculate the query boundaries
-		float min_lat = bounds.minLatitude + min_x * grid_width;
-		float max_lat = bounds.minLatitude + max_x * grid_width;
-		float min_long = bounds.minLongitude + min_y * grid_height;
-		float max_long = bounds.minLongitude + max_y * grid_height;
+		float min_lat = bounds.minLatitude + (min_x - 1) * cell_width;
+		float max_lat = bounds.minLatitude + max_x * cell_width;
+		float min_long = bounds.minLongitude + (min_y - 1) * cell_height;
+		float max_long = bounds.minLongitude + max_y * cell_height;
 		IntermediateResult res = ForkJoinPool.commonPool()
 		    .invoke(new Query(data, min_lat, max_lat, min_long,
 			max_long, 0, data.data_size));
