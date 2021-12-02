@@ -12,7 +12,7 @@ public class Version2 extends VersionObject {
 		_grid_y = grid_y;
 	}
 
-	public QueryResult query(int min_x, int max_x, int min_y, int max_y) {
+	public QueryResult query(int min_x, int min_y, int max_x, int max_y) {
 		Boundary bounds = BoundaryFinder.findBoundaries(_data);
 		QueryResult result = Query.query(_data, bounds, _grid_x, _grid_y, min_x, max_x, min_y, max_y);
 		return result;

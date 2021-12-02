@@ -64,6 +64,7 @@ public class PopulationQuery {
 		VersionObject version = null;
 		System.out.println(args[1]);
                 CensusData c1 = parse(args[0]);
+
 		QueryResult query = null;               
                 System.out.println("Please give west, south, east, north coordinates of your query rectangle:\n>>");
                 Scanner userInput = new Scanner(System.in);
@@ -76,6 +77,7 @@ public class PopulationQuery {
                 int north = Integer.parseInt(gridValues[3]);
                 int xGrid = Integer.parseInt(args[2]);
                 int yGrid = Integer.parseInt(args[3]);                
+
                 if(args[1].equals("-v1"))
                 {
                     System.out.println("Running version 1");
@@ -85,7 +87,7 @@ public class PopulationQuery {
                 if(args[1].equals("-v2"))
                 {
                     System.out.println("Running version 2");
-                    version = new Version2(c1, 100, 500);
+                    version = new Version2(c1, xGrid, yGrid);
 		    query = version.query(west, south, east, north);
                 }
                 if(args[1].equals("-v3"))
@@ -95,13 +97,15 @@ public class PopulationQuery {
                 if(args[1].equals("-v4"))
                 {
                     System.out.println("Running version 4");
+		    version = new Version4(c1, grid_x, grid_y);
+		    query = version.query(1, 1, 100, 500);
                 }
                 if(args[1].equals("-v5"))
                 {
                     System.out.println("Running on version 5");
                 }
                 System.out.println("population of rectangle: " + query.population);
-                System.out.println("percent of total population: " + query.percentage);
+                System.out.println("percent of total population: " + query.percentage + "%");
 
 		// TODO: Eventually write query loop
 	}
