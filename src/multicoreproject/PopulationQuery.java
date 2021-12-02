@@ -97,7 +97,7 @@ public class PopulationQuery {
                 if(args[1].equals("-v4"))
                 {
                     System.out.println("Running version 4");
-		    version = new Version4(c1, grid_x, grid_y);
+		    version = new Version4(c1, xGrid, yGrid);
 		    query = version.query(1, 1, 100, 500);
                 }
                 if(args[1].equals("-v5"))
