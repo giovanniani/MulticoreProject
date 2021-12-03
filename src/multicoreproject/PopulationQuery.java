@@ -78,8 +78,7 @@ public class PopulationQuery {
                     System.out.println("Please give west, south, east, north coordinates of your query rectangle:\n>>");
                     Scanner userInput = new Scanner(System.in);
                     String gridInput = userInput.nextLine();  // Read user input
-                    String[] gridValues = gridInput.split(" ", 4);
-                    
+                    String[] gridValues = gridInput.split(" ", 4);                    
                     try
                     {
                         west = Integer.parseInt(gridValues[0]);
@@ -108,6 +107,8 @@ public class PopulationQuery {
                         if(args[1].equals("-v3"))
                         {
                             System.out.println("Running version 3");
+                            version = new Version3(c1, xGrid, yGrid);
+                            query = version.query(west, south, east, north);
                         }
                         if(args[1].equals("-v4"))
                         {
@@ -126,11 +127,7 @@ public class PopulationQuery {
                     else
                     {
                         System.out.println("Happy end of semester and \nMeery Christmas :D");
-                    }
-                    
+                    }                    
                 }
-                
-
-		// TODO: Eventually write query loop
 	}
 }
