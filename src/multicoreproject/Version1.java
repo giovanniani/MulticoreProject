@@ -21,8 +21,7 @@ public class Version1 extends VersionObject{
         // TODO
         _globalBoundaries = new Boundary(0, 0, 0, 0);
         float newMaxLat, newMinLat, newMinLong, newMaxLong;
-        
-        
+                
         QueryResult tempQuery = new QueryResult(0, 0);
         findBoundaries();      
         //transforming ranges for search
@@ -41,12 +40,12 @@ public class Version1 extends VersionObject{
                     tempQuery.population += tempGroup.population;                    
             }
         }
-        //}
+        
         tempQuery.percentage = (tempQuery.population / (float)_globalBoundaries.population) * 100;
         return tempQuery;
 
     }
-        
+    
     private void findBoundaries()
     {
         _globalBoundaries.maxLatitude = _globalBoundaries.minLatitude = _data.data[0].latitude;

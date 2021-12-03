@@ -38,7 +38,7 @@ public class PopulationQuery {
                 if(tokens.length != TOKENS_PER_LINE)
                 	throw new NumberFormatException();
                 int population = Integer.parseInt(tokens[POPULATION_INDEX]);
-                if(population != 0)
+                if(population != 0) 
                 	result.add(population,
                 			   Float.parseFloat(tokens[LATITUDE_INDEX]),
                 		       Float.parseFloat(tokens[LONGITUDE_INDEX]));
