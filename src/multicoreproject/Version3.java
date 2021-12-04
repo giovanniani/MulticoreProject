@@ -16,7 +16,7 @@ public class Version3 extends VersionObject {
                 _updatedPopulationGrid = new int[4][4];
 	}
 
-	public QueryResult query(int min_long, int min_lat, int max_long, int max_lat) {
+	public QueryResult query(int min_long, int max_lat, int max_long, int min_lat) {
             
             QueryResult tempQuery = new QueryResult(0, 0);
             _globalBoundaries = new Boundary(0, 0, 0, 0);
@@ -47,16 +47,35 @@ public class Version3 extends VersionObject {
                 }
             }
             
-            //now with the population grid we update it with the new formula of combining previous fields
-            updateGrid();
+           //now with the population grid we update it with the new formula of combining previous fields
+           updateGrid();
+           //now with the gripd updated, we run the query
+           int topLeft = 0, topRight = 0, bottomLeft = 0, bottomRight = 0;
+           bottomRight = _updatedPopulationGrid[max_lat][max_long];
+           if(min_long > 0 && min_lat > 0)
+           {
+               bottomLeft = _updatedPopulationGrid[max_lat][min_long - 1];
+               topLeft = _updatedPopulationGrid[min_lat - 1][min_long - 1];               
+               topRight = _updatedPopulationGrid[min_lat - 1][max_long];               
+           }
+           else
+           {
+               if(min_lat == 0)
+               {
+                   topLeft = topRight = 0;
+                   bottomLeft = _updatedPopulationGrid[max_lat][min_long - 1];
+               }
+               if(min_long == 0)
+               {
+                   topLeft = _updatedPopulationGrid[min_lat - 1][min_long - 1];               
+                   topRight = _updatedPopulationGrid[min_lat - 1][max_long];               
+                   bottomLeft = 0;
+               }
+           }
+           
+           tempQuery.population = bottomRight - bottomLeft - topRight + topLeft;
+           tempQuery.percentage = (tempQuery.population / (float)_globalBoundaries.population) * 100;
             
-            for(int i = 0; i < _grid_x; i ++)
-            {
-                for(int j = 0; j < _grid_y; j ++)
-                {                    
-                    System.out.println(_populationGrid[i][j]);                    
-                }                
-            }
             return tempQuery;
 	}
         
@@ -79,12 +98,6 @@ public class Version3 extends VersionObject {
             }
         }            
         
-        private float convertRange(float minRealRange, float maxRealRange, int newRange, int actualValue)
-        {
-            float newValue = (((maxRealRange - minRealRange) * actualValue) / newRange) + minRealRange;
-            return newValue;
-        }
-        
         private int convertRangeInt(float minRealRange, float maxRealRange, float newMinRange, float newMaxRange, float actualValue)
         {
             float newValue = (((maxRealRange - minRealRange) * actualValue) / (newMaxRange + newMinRange)) + minRealRange;
@@ -93,7 +106,8 @@ public class Version3 extends VersionObject {
         
         private void updateGrid()
         {
-            int populationGrid[][] = _populationGrid;
+            //int populationGrid[][] = _populationGrid;
+            int populationGrid[][] = {{0,11,1,9},{1,7,4,3},{2,2,0,0},{9,1,1,1}};
             int updatedGrid[][] = new int[populationGrid.length][populationGrid[0].length];
 
             int tempPopulationSize;             
@@ -104,18 +118,17 @@ public class Version3 extends VersionObject {
                 {
                     tempPopulationSize = populationGrid[i][j];
                     if(i > 0 && j > 0)
-                        tempPopulationSize += updatedGrid[i - 1][j - 1];
-                    for(int i2 = 0; i2 < i; i2++)
-                    {
-                        tempPopulationSize += populationGrid[i2][j];
-                    }
-                    for(int j2 = 0; j2 < j; j2++)
-                    {
-                        tempPopulationSize += populationGrid[i][j2];
-                    }
+                        tempPopulationSize += updatedGrid[i - 1][j] + updatedGrid[i][j - 1] - updatedGrid[i - 1][j - 1];
+                    else{
+                        if(i != 0)
+                            tempPopulationSize += updatedGrid[i - 1][j];
+                        if(j != 0)
+                            tempPopulationSize += updatedGrid[i][j - 1];
+                    }                    
                     updatedGrid[i][j] = tempPopulationSize;
                 }
             }
+            this._updatedPopulationGrid = updatedGrid;
             System.out.println(updatedGrid[updatedGrid.length - 1][updatedGrid[0].length - 1]);            
         }
 }
