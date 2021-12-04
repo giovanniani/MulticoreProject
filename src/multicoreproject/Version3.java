@@ -5,7 +5,7 @@ public class Version3 extends VersionObject {
 	private CensusData _data;
 	private int _grid_x;
 	private int _grid_y;
-        private int _populationGrid[][];
+        private int _populationGrid[][], _updatedPopulationGrid[][];
         private Boundary _globalBoundaries;
 
 	public Version3(CensusData data, int grid_x, int grid_y) {
@@ -13,6 +13,7 @@ public class Version3 extends VersionObject {
 		_grid_x = grid_x;
 		_grid_y = grid_y;
                 _populationGrid = new int[grid_x][grid_y];
+                _updatedPopulationGrid = new int[4][4];
 	}
 
 	public QueryResult query(int min_long, int min_lat, int max_long, int max_lat) {
@@ -28,9 +29,9 @@ public class Version3 extends VersionObject {
             blockX = convertRangeInt(0, _grid_x, _globalBoundaries.minLongitude, _globalBoundaries.maxLongitude, tempGroup.longitude); // converting the latitud into Y block
             blockY = convertRangeInt(0, _grid_y, _globalBoundaries.minLatitude, _globalBoundaries.maxLatitude, tempGroup.latitude); // converting the longitued into X block
             //once converted we can put them in the corresponding block in the grid
+             
             
-            
-            
+            //creating now the population grid
             for(int block = 0; block < _data.data_size; block++)
             {
                 tempGroup = this._data.data[block];
@@ -46,6 +47,8 @@ public class Version3 extends VersionObject {
                 }
             }
             
+            //now with the population grid we update it with the new formula of combining previous fields
+            updateGrid();
             
             for(int i = 0; i < _grid_x; i ++)
             {
@@ -86,5 +89,33 @@ public class Version3 extends VersionObject {
         {
             float newValue = (((maxRealRange - minRealRange) * actualValue) / (newMaxRange + newMinRange)) + minRealRange;
             return (int) newValue;
+        }
+        
+        private void updateGrid()
+        {
+            int populationGrid[][] = _populationGrid;
+            int updatedGrid[][] = new int[populationGrid.length][populationGrid[0].length];
+
+            int tempPopulationSize;             
+
+            for(int i = 0; i < populationGrid.length; i++)
+            {
+                for(int j = 0; j < populationGrid[i].length; j++)
+                {
+                    tempPopulationSize = populationGrid[i][j];
+                    if(i > 0 && j > 0)
+                        tempPopulationSize += updatedGrid[i - 1][j - 1];
+                    for(int i2 = 0; i2 < i; i2++)
+                    {
+                        tempPopulationSize += populationGrid[i2][j];
+                    }
+                    for(int j2 = 0; j2 < j; j2++)
+                    {
+                        tempPopulationSize += populationGrid[i][j2];
+                    }
+                    updatedGrid[i][j] = tempPopulationSize;
+                }
+            }
+            System.out.println(updatedGrid[updatedGrid.length - 1][updatedGrid[0].length - 1]);            
         }
 }
