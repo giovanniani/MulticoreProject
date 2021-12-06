@@ -16,13 +16,11 @@ public class GridBuilder extends RecursiveTask<Grid> {
 		_data = data;
 		_high = hi;
 		_low = lo;
-		// TODO
 		_grid = grid;
 	}
 
 	protected Grid compute() {
 		if ((_high - _low) <= THRESHOLD) {
-			// TODO: Compute
 			for (int i = _low; i < _high; ++i) {
 				_grid.update(_data.data[i]);
 			}
@@ -33,7 +31,6 @@ public class GridBuilder extends RecursiveTask<Grid> {
 			left.fork();
 			Grid rightg = right.compute();
 			Grid leftg = left.join();
-			// TODO: Combine
 			_grid.combine(leftg);
 			_grid.combine(rightg);
 		}
