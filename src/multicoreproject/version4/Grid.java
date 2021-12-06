@@ -5,22 +5,22 @@ import multicoreproject.version2.Boundary;
 public class Grid {
 	public int[][] data;
 	private Boundary _bounds;
-	private int _cell_x;
-	private int _cell_y;
+	private float _cell_x;
+	private float _cell_y;
 	private int _grid_x;
 	private int _grid_y;
 
 	public Grid(Boundary bounds, int grid_x, int grid_y) {
 		data = new int[grid_x][grid_y];
+		// Initialize the grid
 		for (int x = 0; x < grid_x; ++x) {
 			for (int y = 0; y < grid_y; ++y) {
 				data[x][y] = 0;
 			}
 		}
 		_bounds = bounds;
-		_cell_x = (int)((bounds.maxLatitude - bounds.minLatitude) / ((float)grid_x));
-		_cell_y = (int)((bounds.maxLongitude - bounds.minLongitude) / ((float)grid_y));
-		System.out.print("cell_x: " + _cell_x + ", cell_y: " + _cell_y);
+		_cell_x = (bounds.maxLatitude - bounds.minLatitude) / ((float)grid_x);
+		_cell_y = (bounds.maxLongitude - bounds.minLongitude) / ((float)grid_y);
 		_grid_x = grid_x;
 		_grid_y = grid_y;
 	}
@@ -32,8 +32,10 @@ public class Grid {
 
 	public void update(CensusGroup group) {
 		// Calculate x and y
-		int x = (int)((group.latitude - _bounds.minLatitude) / ((float)_cell_x));
-		int y = (int)((group.longitude - _bounds.minLongitude) / ((float)_cell_y));
+		int x = (int)((group.latitude - _bounds.minLatitude) / _cell_x);
+		int y = (int)((group.longitude - _bounds.minLongitude) / _cell_y);
+		x = (x >= _grid_x) ? (_grid_x - 1) : x;
+		y = (y >= _grid_y) ? (_grid_y - 1) : y;
 		data[x][y] += group.population;
 	}
 

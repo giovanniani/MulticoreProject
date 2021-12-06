@@ -38,7 +38,7 @@ public class PopulationQuery {
                 if(tokens.length != TOKENS_PER_LINE)
                 	throw new NumberFormatException();
                 int population = Integer.parseInt(tokens[POPULATION_INDEX]);
-                if(population != 0) 
+                if(population != 0)
                 	result.add(population,
                 			   Float.parseFloat(tokens[LATITUDE_INDEX]),
                 		       Float.parseFloat(tokens[LONGITUDE_INDEX]));
@@ -68,6 +68,33 @@ public class PopulationQuery {
 		QueryResult query = null;               
                 int xGrid = Integer.parseInt(args[2]);
                 int yGrid = Integer.parseInt(args[3]);  
+
+		// Initialize the versions
+                if(args[1].equals("-v1"))
+                {
+                    System.out.println("Running version 1");
+                    version = new Version1(c1, xGrid, yGrid);
+                }
+                if(args[1].equals("-v2"))
+                {
+                    System.out.println("Running version 2");
+                    version = new Version2(c1, xGrid, yGrid);
+                    // query = version.query(west, south, east, north);
+                }
+                if(args[1].equals("-v3"))
+                {
+                    System.out.println("Running version 3");
+                }
+                if(args[1].equals("-v4"))
+                {
+                    System.out.println("Running version 4");
+                    version = new Version4(c1, xGrid, yGrid);
+                    // query = version.query(1, 1, 100, 500);
+                }
+                if(args[1].equals("-v5"))
+                {
+                    System.out.println("Running on version 5");
+                }
                 boolean running = true;
                 int west = 0;
                 int east = 0;
@@ -78,7 +105,8 @@ public class PopulationQuery {
                     System.out.println("Please give west, south, east, north coordinates of your query rectangle:\n>>");
                     Scanner userInput = new Scanner(System.in);
                     String gridInput = userInput.nextLine();  // Read user input
-                    String[] gridValues = gridInput.split(" ", 4);                    
+                    String[] gridValues = gridInput.split(" ", 4);
+                    
                     try
                     {
                         west = Integer.parseInt(gridValues[0]);
@@ -90,36 +118,11 @@ public class PopulationQuery {
                     {
                         running = false;
                     }
+
+                    query = version.query(west, south, east, north); //int min_long, int max_lat, int max_long, int min_lat
+
                     if(running)
                     {
-                        if(args[1].equals("-v1"))
-                        {
-                            System.out.println("Running version 1");
-                            version = new Version1(c1, xGrid, yGrid);
-                            query = version.query(west, south, east, north); //int min_long, int max_lat, int max_long, int min_lat
-                        }
-                        if(args[1].equals("-v2"))
-                        {
-                            System.out.println("Running version 2");
-                            version = new Version2(c1, xGrid, yGrid);
-                            query = version.query(west, south, east, north);
-                        }
-                        if(args[1].equals("-v3"))
-                        {
-                            System.out.println("Running version 3");
-                            version = new Version3(c1, xGrid, yGrid);
-                            query = version.query(west, south, east, north);
-                        }
-                        if(args[1].equals("-v4"))
-                        {
-                            System.out.println("Running version 4");
-                            version = new Version4(c1, xGrid, yGrid);
-                            query = version.query(1, 1, 100, 500);
-                        }
-                        if(args[1].equals("-v5"))
-                        {
-                            System.out.println("Running on version 5");
-                        }
                     
                         System.out.println("population of rectangle: " + query.population);
                         System.out.println("percent of total population: " + query.percentage + "%");
@@ -127,7 +130,8 @@ public class PopulationQuery {
                     else
                     {
                         System.out.println("Happy end of semester and \nMeery Christmas :D");
-                    }                    
+                    }
+                    
                 }
 	}
 }
