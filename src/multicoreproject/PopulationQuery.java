@@ -74,6 +74,7 @@ public class PopulationQuery {
                 {
                     System.out.println("Running version 1");
                     version = new Version1(c1, xGrid, yGrid);
+                    
                 }
                 if(args[1].equals("-v2"))
                 {
@@ -84,6 +85,8 @@ public class PopulationQuery {
                 if(args[1].equals("-v3"))
                 {
                     System.out.println("Running version 3");
+                    version = new Version3(c1, xGrid, yGrid);
+                   
                 }
                 if(args[1].equals("-v4"))
                 {
