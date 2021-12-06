@@ -61,7 +61,6 @@ public class Query extends RecursiveTask<IntermediateResult> {
 	public static QueryResult query(CensusData data, Boundary bounds, int grid_x, int grid_y, int min_x, int max_x, int min_y, int max_y) {
 		float cell_width = (bounds.maxLatitude - bounds.minLatitude) / ((float)grid_x);
 		float cell_height = (bounds.maxLongitude - bounds.minLongitude) / ((float)grid_y);
-		System.out.println(min_x + " " + max_x + " " + min_y + " " + max_y);
 		// Calculate the query boundaries
 		float min_lat = bounds.minLatitude + (min_x - 1) * cell_width;
 		float max_lat = bounds.minLatitude + max_x * cell_width;
