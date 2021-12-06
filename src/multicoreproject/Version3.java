@@ -12,11 +12,16 @@ public class Version3 extends VersionObject {
 		_data = data;
 		_grid_x = grid_x;
 		_grid_y = grid_y;
-                _populationGrid = new int[grid_x][grid_y];
-                _updatedPopulationGrid = new int[4][4];
+                _populationGrid = new int[grid_y][grid_x];
+                _updatedPopulationGrid = new int[grid_y][grid_x];
 	}
 
 	public QueryResult query(int min_long, int max_lat, int max_long, int min_lat) {
+            
+            min_long -= 1;
+            max_lat -= 1;
+            max_long -= 1;
+            min_lat -= 1;
             
             QueryResult tempQuery = new QueryResult(0, 0);
             _globalBoundaries = new Boundary(0, 0, 0, 0);
@@ -37,13 +42,13 @@ public class Version3 extends VersionObject {
                 tempGroup = this._data.data[block];
                 blockX = convertRangeInt(0, _grid_x, _globalBoundaries.minLongitude, _globalBoundaries.maxLongitude, tempGroup.longitude); // converting the latitud into Y block
                 blockY = convertRangeInt(0, _grid_y, _globalBoundaries.minLatitude, _globalBoundaries.maxLatitude, tempGroup.latitude); // converting the longitued into X block               
-                if(_populationGrid[blockX][blockY] == 0)
+                if(_populationGrid[blockY][blockX] == 0)
                 {
-                    _populationGrid[blockX][blockY] = tempGroup.population;
+                    _populationGrid[blockY][blockX] = tempGroup.population;
                 }
                 else
                 {
-                    _populationGrid[blockX][blockY] += tempGroup.population;
+                    _populationGrid[blockY][blockX] += tempGroup.population;
                 }
             }
             
@@ -51,7 +56,7 @@ public class Version3 extends VersionObject {
            updateGrid();
            //now with the gripd updated, we run the query
            int topLeft = 0, topRight = 0, bottomLeft = 0, bottomRight = 0;
-           bottomRight = _updatedPopulationGrid[max_lat][max_long];
+           bottomRight = _updatedPopulationGrid[max_lat - 1][max_long - 1];
            if(min_long > 0 && min_lat > 0)
            {
                bottomLeft = _updatedPopulationGrid[max_lat][min_long - 1];
@@ -60,16 +65,26 @@ public class Version3 extends VersionObject {
            }
            else
            {
-               if(min_lat == 0)
+               if(min_lat == 0 && min_long > 0)
                {
                    topLeft = topRight = 0;
                    bottomLeft = _updatedPopulationGrid[max_lat][min_long - 1];
                }
-               if(min_long == 0)
-               {
-                   topLeft = _updatedPopulationGrid[min_lat - 1][min_long - 1];               
-                   topRight = _updatedPopulationGrid[min_lat - 1][max_long];               
-                   bottomLeft = 0;
+               else                
+               {   
+                   if(min_lat > 1 && min_long == 0)
+                   {
+                       topRight = _updatedPopulationGrid[min_lat - 1][max_long];
+                       topLeft = bottomLeft = 0;
+                   }     
+                   else
+                   {
+                       if(min_lat == 0 && min_long == 0)
+                       {
+                           topLeft = topRight = bottomLeft = 0;
+                       }
+                   }
+                   
                }
            }
            
@@ -106,8 +121,8 @@ public class Version3 extends VersionObject {
         
         private void updateGrid()
         {
-            //int populationGrid[][] = _populationGrid;
-            int populationGrid[][] = {{0,11,1,9},{1,7,4,3},{2,2,0,0},{9,1,1,1}};
+            int populationGrid[][] = _populationGrid;
+            //int populationGrid[][] = {{0,11,1,9},{1,7,4,3},{2,2,0,0},{9,1,1,1}};
             int updatedGrid[][] = new int[populationGrid.length][populationGrid[0].length];
 
             int tempPopulationSize;             
