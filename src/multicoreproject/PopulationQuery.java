@@ -94,11 +94,12 @@ public class PopulationQuery {
                 {
                     System.out.println("Running version 4");
                     version = new Version4(c1, xGrid, yGrid);
-                    // query = version.query(1, 1, 100, 500);
+                    
                 }
                 if(args[1].equals("-v5"))
                 {
                     System.out.println("Running on version 5");
+                    version = new Version5(c1, xGrid, yGrid);
                 }
 
 		// Run an evaluation if `--evaluate` is passed as a 5th
