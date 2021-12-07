@@ -13,9 +13,7 @@ public class Version3 extends VersionObject {
 		_grid_x = grid_x;
 		_grid_y = grid_y;
                 _populationGrid = new int[grid_y][grid_x];
-                _updatedPopulationGrid = new int[grid_y][grid_x];
-                
-            
+                _updatedPopulationGrid = new int[grid_y][grid_x];                           
             
             _globalBoundaries = new Boundary(0, 0, 0, 0);
             float newMaxLat, newMinLat, newMinLong, newMaxLong;
@@ -56,42 +54,42 @@ public class Version3 extends VersionObject {
             max_long -= 1;
             min_lat -= 1;
             QueryResult tempQuery = new QueryResult(0, 0);
-           //now with the gripd updated, we run the query
-           int topLeft = 0, topRight = 0, bottomLeft = 0, bottomRight = 0;
-           bottomRight = _updatedPopulationGrid[max_lat - 1][max_long - 1];
-           if(min_long > 0 && min_lat > 0)
-           {
-               bottomLeft = _updatedPopulationGrid[max_lat][min_long - 1];
-               topLeft = _updatedPopulationGrid[min_lat - 1][min_long - 1];               
-               topRight = _updatedPopulationGrid[min_lat - 1][max_long];               
-           }
-           else
-           {
-               if(min_lat == 0 && min_long > 0)
-               {
-                   topLeft = topRight = 0;
-                   bottomLeft = _updatedPopulationGrid[max_lat][min_long - 1];
-               }
-               else                
-               {   
-                   if(min_lat > 1 && min_long == 0)
-                   {
-                       topRight = _updatedPopulationGrid[min_lat - 1][max_long];
-                       topLeft = bottomLeft = 0;
-                   }     
-                   else
-                   {
-                       if(min_lat == 0 && min_long == 0)
-                       {
-                           topLeft = topRight = bottomLeft = 0;
-                       }
-                   }
-                   
-               }
-           }
+            //now with the gripd updated, we run the query
+            int topLeft = 0, topRight = 0, bottomLeft = 0, bottomRight = 0;
+            bottomRight = _updatedPopulationGrid[max_lat - 1][max_long - 1];
+            if(min_long > 0 && min_lat > 0)
+            {
+                bottomLeft = _updatedPopulationGrid[max_lat][min_long - 1];
+                topLeft = _updatedPopulationGrid[min_lat - 1][min_long - 1];               
+                topRight = _updatedPopulationGrid[min_lat - 1][max_long];               
+            }
+            else
+            {
+                if(min_lat == 0 && min_long > 0)
+                {
+                    topLeft = topRight = 0;
+                    bottomLeft = _updatedPopulationGrid[max_lat][min_long - 1];
+                }
+                else                
+                {   
+                    if(min_lat > 1 && min_long == 0)
+                    {
+                        topRight = _updatedPopulationGrid[min_lat - 1][max_long];
+                        topLeft = bottomLeft = 0;
+                    }     
+                    else
+                    {
+                        if(min_lat == 0 && min_long == 0)
+                        {
+                            topLeft = topRight = bottomLeft = 0;
+                        }
+                    }
+
+                }
+            }
            
-           tempQuery.population = bottomRight - bottomLeft - topRight + topLeft;
-           tempQuery.percentage = (tempQuery.population / (float)_globalBoundaries.population) * 100;
+            tempQuery.population = bottomRight - bottomLeft - topRight + topLeft;
+            tempQuery.percentage = (tempQuery.population / (float)_globalBoundaries.population) * 100;
             
             return tempQuery;
 	}
