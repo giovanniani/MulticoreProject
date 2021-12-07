@@ -41,8 +41,13 @@ public class Version4 extends VersionObject {
 	}
 
 	QueryResult query(int min_x, int min_y, int max_x, int max_y) {
-		// TODO: This query isn't quite right
-		int pop = _grid[max_x - 1][max_y - 1] - (_grid[min_x - 1][max_y - 1] + _grid[max_x - 1][min_y - 1] - _grid[min_x - 1][min_y - 1]);
+		int pop = _grid[max_x - 1][max_y - 1];
+		if (min_x > 1)
+			pop -= _grid[min_x - 2][max_y - 1];
+		if (min_y > 1)
+			pop -= _grid[max_x - 1][min_y - 2];
+		if (min_x > 1 && min_y > 1)
+			pop += _grid[min_x - 2][min_y - 2];
 		return new QueryResult(pop, ((float)100.0) * ((float)pop) / _total_pop);
 	}
 }

@@ -5,6 +5,8 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.Scanner; 
+import java.util.Random;
+import java.time.Instant;
 
 
 public class PopulationQuery {
@@ -98,6 +100,17 @@ public class PopulationQuery {
                 {
                     System.out.println("Running on version 5");
                 }
+
+		// Run an evaluation if `--evaluate` is passed as a 5th
+		// command line argument
+		if (args.length >= 6 && args[4].equals("--evaluate"))
+		{
+		    int count = Integer.parseInt(args[5]);
+		    System.out.println("Running evaluation");
+		    evaluate(version, xGrid, yGrid, count);
+		    return;
+		}
+
                 boolean running = true;
                 int west = 0;
                 int east = 0;
@@ -136,5 +149,48 @@ public class PopulationQuery {
                     }
                     
                 }
+	}
+
+	private static int INITIAL_QUERY_COUNT = 10;
+
+	public static int bound(int num, int min, int max)
+	{
+		num = num > 0 ? num : -num;
+		return min + (num % (max - min + 1));
+	}
+
+	public static void evaluate(VersionObject version, int xGrid, int yGrid, int count)
+	{
+		// Run a number of initial test queries
+		Random rng = new Random();
+		for (int i = 0; i < INITIAL_QUERY_COUNT; ++i)
+		{
+			int min_x = bound(rng.nextInt(), 1, xGrid);
+			int min_y = bound(rng.nextInt(), 1, yGrid);
+			int max_x = bound(rng.nextInt(), min_x, xGrid);
+			int max_y = bound(rng.nextInt(), min_y, yGrid);
+			version.query(min_x, min_y, max_x, max_y);
+		}
+
+		// Generate the queries
+		int[][] queries = new int[count][4];
+		for (int i = 0; i < count; ++i)
+		{
+			queries[i][0] = bound(rng.nextInt(), 1, xGrid);
+			queries[i][1] = bound(rng.nextInt(), 1, yGrid);
+			queries[i][2] = bound(rng.nextInt(), queries[i][0], xGrid);
+			queries[i][3] = bound(rng.nextInt(), queries[i][1], yGrid);
+		}
+
+		// Run the actual queries and the timing code
+		long startTime = Instant.now().getEpochSecond();
+		for (int i = 0; i < count; ++i)
+		{
+			version.query(queries[i][0], queries[i][1], queries[i][2], queries[i][3]);
+		}
+		long endTime = Instant.now().getEpochSecond();
+
+		long totalTime = endTime - startTime + 1;
+		System.out.println("Total time: " + totalTime + "s");
 	}
 }
