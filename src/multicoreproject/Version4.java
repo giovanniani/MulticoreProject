@@ -45,7 +45,7 @@ public class Version4 extends VersionObject {
 		if (min_x > 1)
 			pop -= _grid[min_x - 2][max_y - 1];
 		if (min_y > 1)
-			pop -= _grid[min_x - 1][min_y - 2];
+			pop -= _grid[max_x - 1][min_y - 2];
 		if (min_x > 1 && min_y > 1)
 			pop += _grid[min_x - 2][min_y - 2];
 		return new QueryResult(pop, ((float)100.0) * ((float)pop) / _total_pop);
