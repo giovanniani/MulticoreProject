@@ -11,25 +11,28 @@ public class Version1 extends VersionObject{
     private int _grid_y;
     
     public Version1(CensusData data, int grid_x, int grid_y) {
-		_data = data;
-                _grid_x = grid_x;
-		_grid_y = grid_y;                
-	}
+        _data = data;
+        _grid_x = grid_x;
+        _grid_y = grid_y;   
+        _globalBoundaries = new Boundary(0, 0, 0, 0);
+                
+        findBoundaries();      
+        //transforming ranges for search
+        
+        //-----------
+    }
 
     public QueryResult query(int min_long, int min_lat, int max_long, int max_lat) 
     {
-        // TODO
-        _globalBoundaries = new Boundary(0, 0, 0, 0);
+        min_long -= 1;        
+        min_lat -= 1;
         float newMaxLat, newMinLat, newMinLong, newMaxLong;
-                
-        QueryResult tempQuery = new QueryResult(0, 0);
-        findBoundaries();      
-        //transforming ranges for search
         newMinLat = convertRange(_globalBoundaries.minLatitude, _globalBoundaries.maxLatitude, _grid_y, min_lat);
         newMaxLat = convertRange(_globalBoundaries.minLatitude, _globalBoundaries.maxLatitude, _grid_y, max_lat);
         newMinLong = convertRange(_globalBoundaries.minLongitude, _globalBoundaries.maxLongitude, _grid_x, min_long);
         newMaxLong = convertRange(_globalBoundaries.minLongitude, _globalBoundaries.maxLongitude, _grid_x, max_long);
-        //-----------
+        // TODO
+        QueryResult tempQuery = new QueryResult(0, 0);
         CensusGroup tempGroup;           
         for(int block = 0; block < _data.data_size; block++)
         {
