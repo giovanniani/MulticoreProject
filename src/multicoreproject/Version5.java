@@ -3,8 +3,8 @@ package multicoreproject;
 import multicoreproject.version5.GridItem;
 import multicoreproject.version2.BoundaryFinder;
 import multicoreproject.version2.Boundary;
-import multicoreproject.version4.GridBuilder;
-import multicoreproject.version4.Grid;
+import multicoreproject.version5.GridBuilder;
+import multicoreproject.version5.Grid;
 
 public class Version5 extends VersionObject {
     private GridItem[][] _grid;
@@ -26,7 +26,7 @@ public class Version5 extends VersionObject {
         // Build the grid
         
         //update in order to make thread friendly
-        //_grid = GridBuilder.buildGrid(data, grid_x, grid_y, bounds);
+        _grid = GridBuilder.buildGrid(data, grid_x, grid_y, bounds);
 
         // Step 2: Update the grid so that each cell holds the total
         // population for all cells that are farther south or farther

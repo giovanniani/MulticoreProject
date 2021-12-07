@@ -16,6 +16,7 @@ public class Grid {
 		// Initialize the grid
 		for (int x = 0; x < grid_x; ++x) {
 			for (int y = 0; y < grid_y; ++y) {
+				data[x][y] = new GridItem();
 				data[x][y].updatePopulation(0);
 			}
 		}
