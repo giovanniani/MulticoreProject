@@ -264,13 +264,36 @@ public class PopulationQuery {
                 }
 
 		// Run the actual queries and the timing code
+                QueryResult[] querylist = new QueryResult[count];
 		long startTime = Instant.now().getEpochSecond();
 		for (int i = 0; i < count; ++i)
 		{
-			version.query(queries[i][0], queries[i][1], queries[i][2], queries[i][3]);
+			querylist[i] = version.query(queries[i][0], queries[i][1], queries[i][2], queries[i][3]);
 		}
 		long endTime = Instant.now().getEpochSecond();
+                
+                
+                //saving query results
+                File Testfile = new File("QerryResults.txt");
+                try {
+                    Testfile.createNewFile();
 
+                    // creates a FileWriter Object
+                    FileWriter writer; 
+                    writer = new FileWriter(Testfile);                   
+                
+                    for (int i = 0; i < count; ++i)
+                    {                            
+                            writer.write(String.valueOf(queries[i][0]) + " " + String.valueOf(queries[i][1]) + " " + String.valueOf(queries[i][2]) + " " + String.valueOf(queries[i][3]) +
+                            " = # " + String.valueOf(querylist[i].population) + " % " + String.valueOf(querylist[i].percentage) +"\n");
+                    }
+                    // Writes the content to the file
+                    writer.flush();
+                    writer.close();
+                    } catch (IOException ex) {
+                        Logger.getLogger(PopulationQuery.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                
 		long totalTime = endTime - startTime + 1;
 		System.out.println("Total querry time: " + totalTime + "s");
 	}
