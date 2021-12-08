@@ -11,25 +11,32 @@ package multicoreproject.version5;
  */
 public class GridItem {
     private int population;
-    private boolean lock;
+    // private boolean lock;
+    private Object lock = new Object();
     
     public GridItem()
     {
         this.population = 0;
-        this.lock = false;
+        // this.lock = false;
     }
     
     public void updatePopulation(int populationSize)
     {
-        this.lock = true;
-        population += populationSize;
-        this.lock = false;
+        synchronized (lock) {
+            // this.lock = true;
+            population += populationSize;
+            // this.lock = false;
+	    if (populationSize > 0)
+		    System.out.println("Locking with update populationSize = " + populationSize + ", population = " + population);
+	}
     }
     
+/*
     public boolean locked()
     {
         return this.lock;
     }
+*/
     public int getValue()
     {
         return this.population;

@@ -43,17 +43,18 @@ public class GridBuilder extends Thread {
 			} catch (InterruptedException e) {
 				throw new RuntimeException(e);
 			}
-			// _grid.combine(leftg);
-			// _grid.combine(rightg);
 		}
-		// return _grid;
 	}
 
 	public static GridItem[][] buildGrid(CensusData data, int grid_x, int grid_y, Boundary boundary) {
-		// return ForkJoinPool.commonPool().invoke(new GridBuilder(data, 0, data.data_size, grid)).data;
 		Grid grid = new Grid(boundary, grid_x, grid_y);
 		GridBuilder builder = new GridBuilder(data, 0, data.data_size, grid);
 		builder.run();
+		try {
+			builder.join();
+		} catch (InterruptedException e) {
+			throw new RuntimeException(e);
+		}
 		return grid.data;
 	}
 }
