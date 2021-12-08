@@ -3,3 +3,4 @@ dist/
 *.jar
 *.class
 /nbproject/private/
+QerryTests.txt

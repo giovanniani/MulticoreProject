@@ -17,10 +17,7 @@ public class Version5 extends VersionObject {
          
         // get the number of processors available to the Java virtual machine
         int numberOfProcessors = runtime.availableProcessors();
-          
-        System.out.println("Number of processors available to this JVM: " + numberOfProcessors);
-         
-    
+        
         // Calculate the bounds
         Boundary bounds = BoundaryFinder.findBoundaries(data);
         // Build the grid

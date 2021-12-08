@@ -2,11 +2,19 @@ package multicoreproject;
 
 
 import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Scanner; 
 import java.util.Random;
 import java.time.Instant;
+import java.io.File;  // Import the File class
+import java.util.Scanner; // Import the Scanner class to read text files
+
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 
 public class PopulationQuery {
@@ -62,7 +70,13 @@ public class PopulationQuery {
 	// argument 2: number of x-dimension buckets
 	// argument 3: number of y-dimension buckets
 	// argument 4: -v1, -v2, -v3, -v4, or -v5
-	public static void main(String[] args) {
+	public static void main(String[] args){
+                long startPreTime = 0, startTotalTime = 0;
+                if (args.length >= 6 && args[4].equals("--evaluate"))
+		{
+                    startTotalTime = Instant.now().getEpochSecond();
+                    startPreTime = Instant.now().getEpochSecond();
+                }
 		VersionObject version = null;
 		System.out.println(args[1]);
                 CensusData c1 = parse(args[0]);
@@ -104,11 +118,22 @@ public class PopulationQuery {
 
 		// Run an evaluation if `--evaluate` is passed as a 5th
 		// command line argument
+                long endPreTime = Instant.now().getEpochSecond();
 		if (args.length >= 6 && args[4].equals("--evaluate"))
 		{
-		    int count = Integer.parseInt(args[5]);
+		    int count = Integer.parseInt(args[5]);                    
 		    System.out.println("Running evaluation");
-		    evaluate(version, xGrid, yGrid, count);
+                    String file = "";
+                    if(args.length == 7)
+                    {
+                        file = args[6];
+                    }
+                    long totalPreTime = endPreTime - startPreTime + 1;
+                    System.out.println("Total Build time: " + totalPreTime + "s");
+		    evaluate(version, xGrid, yGrid, count, file);                    
+                    long endTotalTime = Instant.now().getEpochSecond();                    
+                    long totalRunTime = endTotalTime - startTotalTime + 1;                    
+                    System.out.println("Total Run time: " + totalRunTime + "s");
 		    return;
 		}
 
@@ -116,7 +141,7 @@ public class PopulationQuery {
                 int west = 0;
                 int east = 0;
                 int north = 0;
-                int south = 0;
+                int south = 0;               
                 while(running)
                 {
                     System.out.println("Please give west, south, east, north coordinates of your query rectangle:\n>>");
@@ -139,8 +164,7 @@ public class PopulationQuery {
                     query = version.query(west, south, east, north); //int min_long, int max_lat, int max_long, int min_lat
 
                     if(running)
-                    {
-                    
+                    {                    
                         System.out.println("population of rectangle: " + query.population);
                         System.out.println("percent of total population: " + query.percentage + "%");
                     }
@@ -160,28 +184,84 @@ public class PopulationQuery {
 		return min + (num % (max - min + 1));
 	}
 
-	public static void evaluate(VersionObject version, int xGrid, int yGrid, int count)
+	public static void evaluate(VersionObject version, int xGrid, int yGrid, int count, String file)
 	{
-		// Run a number of initial test queries
 		Random rng = new Random();
+                int[][] queries = new int[count][4];                
+                int min_x, min_y, max_x, max_y;
+                
+                // creates the file
+                //Created the file with the querries
+                //left commented because we only needed this file to be generated once
+                //if a new file is needed un comment this section of code
+                /*
+                File Testfile = new File("QerryTests.txt");
+                try {
+                    Testfile.createNewFile();
+
+                    // creates a FileWriter Object
+                    FileWriter writer; 
+                    writer = new FileWriter(Testfile);                   
+                
+                    for (long i = 0; i < 2000000000; ++i)
+                    {
+                            min_x = bound(rng.nextInt(), 1, xGrid);
+                            min_y = bound(rng.nextInt(), 1, yGrid);
+                            max_x = bound(rng.nextInt(), min_x, xGrid);
+                            max_y = bound(rng.nextInt(), min_y, yGrid);
+                            writer.write(String.valueOf(min_x) + " " + String.valueOf(min_y) + " " + String.valueOf(max_x) + " " + String.valueOf(max_y) + "\n");
+                    }
+                    // Writes the content to the file
+                    writer.flush();
+                    writer.close();
+                    } catch (IOException ex) {
+                        Logger.getLogger(PopulationQuery.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                */
+                // Run a number of initial test queries 
 		for (int i = 0; i < INITIAL_QUERY_COUNT; ++i)
 		{
-			int min_x = bound(rng.nextInt(), 1, xGrid);
-			int min_y = bound(rng.nextInt(), 1, yGrid);
-			int max_x = bound(rng.nextInt(), min_x, xGrid);
-			int max_y = bound(rng.nextInt(), min_y, yGrid);
+			min_x = bound(rng.nextInt(), 1, xGrid);
+			min_y = bound(rng.nextInt(), 1, yGrid);
+			max_x = bound(rng.nextInt(), min_x, xGrid);
+			max_y = bound(rng.nextInt(), min_y, yGrid);
 			version.query(min_x, min_y, max_x, max_y);
 		}
+                if(file.equals(""))
+                {
+                    // Generate the queries randomly
+                    for (int i = 0; i < count; ++i)
+                    {
+                            queries[i][0] = bound(rng.nextInt(), 1, xGrid);
+                            queries[i][1] = bound(rng.nextInt(), 1, yGrid);
+                            queries[i][2] = bound(rng.nextInt(), queries[i][0], xGrid);
+                            queries[i][3] = bound(rng.nextInt(), queries[i][1], yGrid);
+                    }
+                }
+                else
+                {
+                    //Generate the queries from file
+                    try {
+                        BufferedReader fileIn = new BufferedReader(new FileReader(file));
 
-		// Generate the queries
-		int[][] queries = new int[count][4];
-		for (int i = 0; i < count; ++i)
-		{
-			queries[i][0] = bound(rng.nextInt(), 1, xGrid);
-			queries[i][1] = bound(rng.nextInt(), 1, yGrid);
-			queries[i][2] = bound(rng.nextInt(), queries[i][0], xGrid);
-			queries[i][3] = bound(rng.nextInt(), queries[i][1], yGrid);
-		}
+                        String oneLine; // skip the first line
+                        int counter = 0;
+                        // read each subsequent line and add relevant data to a big array
+                        while ((oneLine = fileIn.readLine()) != null && counter < count) {
+                            String[] currentQuerry = oneLine.split(" ");                        
+                            queries[counter][0] = Integer.parseInt(currentQuerry[0]);
+                            queries[counter][1] = Integer.parseInt(currentQuerry[1]);
+                            queries[counter][2] = Integer.parseInt(currentQuerry[2]);
+                            queries[counter][3] = Integer.parseInt(currentQuerry[3]);                        
+                            counter ++;
+                        }
+
+                        fileIn.close();
+                    } catch(IOException ioe) {
+                        System.err.println("Error opening/reading input or output file.");
+                        System.exit(1);
+                    }
+                }
 
 		// Run the actual queries and the timing code
 		long startTime = Instant.now().getEpochSecond();
@@ -192,6 +272,6 @@ public class PopulationQuery {
 		long endTime = Instant.now().getEpochSecond();
 
 		long totalTime = endTime - startTime + 1;
-		System.out.println("Total time: " + totalTime + "s");
+		System.out.println("Total querry time: " + totalTime + "s");
 	}
 }
