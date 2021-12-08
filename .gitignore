@@ -4,3 +4,4 @@ dist/
 *.class
 /nbproject/private/
 QerryTests.txt
+QerryResults.txt
