@@ -34,8 +34,8 @@ public class GridBuilder extends Thread {
 			}
 		} else {
 			int mid = _low + (_high - _low) / 2;
-			GridBuilder left = new GridBuilder(_data, _low, mid, _grid.emptyCopy());
-			GridBuilder right = new GridBuilder(_data, mid, _high, _grid.emptyCopy());
+			GridBuilder left = new GridBuilder(_data, _low, mid, _grid);
+			GridBuilder right = new GridBuilder(_data, mid, _high, _grid);
 			left.start();
 			right.run();
 			try {
