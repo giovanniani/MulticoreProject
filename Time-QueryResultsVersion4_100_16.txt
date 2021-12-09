@@ -1,0 +1,6 @@
+Version4
+Build Time = 1s
+Query Time = 1s
+Total run Time = 1s
+Number of queries: 100
+Number of cores: 16
