@@ -50,4 +50,9 @@ public class Version4 extends VersionObject {
 			pop += _grid[min_x - 2][min_y - 2];
 		return new QueryResult(pop, ((float)100.0) * ((float)pop) / _total_pop);
 	}
+        
+        public String getVersion()
+        {
+            return "Version4";
+        }
 }

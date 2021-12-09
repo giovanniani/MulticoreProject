@@ -146,4 +146,9 @@ public class Version3 extends VersionObject {
             this._updatedPopulationGrid = updatedGrid;
             System.out.println(updatedGrid[updatedGrid.length - 1][updatedGrid[0].length - 1]);            
         }
+        
+        public String getVersion()
+        {
+            return "Version3";
+        }
 }

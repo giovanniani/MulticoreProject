@@ -73,4 +73,9 @@ public class Version1 extends VersionObject{
         float newValue = (((maxRealRange - minRealRange) * actualValue) / newRange) + minRealRange;
         return newValue;
     }
+    
+    public String getVersion()
+    {
+        return "Version1";
+    }
 }

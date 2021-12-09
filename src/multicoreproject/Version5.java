@@ -10,14 +10,7 @@ public class Version5 extends VersionObject {
     private GridItem[][] _grid;
     private int _total_pop;
 
-    public Version5(CensusData data, int grid_x, int grid_y) {
-
-
-        Runtime runtime = Runtime.getRuntime();
-         
-        // get the number of processors available to the Java virtual machine
-        int numberOfProcessors = runtime.availableProcessors();
-        
+    public Version5(CensusData data, int grid_x, int grid_y) {                
         // Calculate the bounds
         Boundary bounds = BoundaryFinder.findBoundaries(data);
         // Build the grid
@@ -61,5 +54,5 @@ public class Version5 extends VersionObject {
             if (min_x > 1 && min_y > 1)
                     pop += _grid[min_x - 2][min_y - 2].getValue();
             return new QueryResult(pop, ((float)100.0) * ((float)pop) / _total_pop);
-    }
+    }        
 }

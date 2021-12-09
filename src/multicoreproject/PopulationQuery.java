@@ -128,12 +128,8 @@ public class PopulationQuery {
                     {
                         file = args[6];
                     }
-                    long totalPreTime = endPreTime - startPreTime + 1;
-                    System.out.println("Total Build time: " + totalPreTime + "s");
-		    evaluate(version, xGrid, yGrid, count, file);                    
-                    long endTotalTime = Instant.now().getEpochSecond();                    
-                    long totalRunTime = endTotalTime - startTotalTime + 1;                    
-                    System.out.println("Total Run time: " + totalRunTime + "s");
+                    long totalPreTime = endPreTime - startPreTime + 1;                    
+		    evaluate(version, xGrid, yGrid, count, file, totalPreTime, startTotalTime);                                        
 		    return;
 		}
 
@@ -184,7 +180,7 @@ public class PopulationQuery {
 		return min + (num % (max - min + 1));
 	}
 
-	public static void evaluate(VersionObject version, int xGrid, int yGrid, int count, String file)
+	public static void evaluate(VersionObject version, int xGrid, int yGrid, int count, String file, long totalPreTime, long startTotalTime)
 	{
 		Random rng = new Random();
                 int[][] queries = new int[count][4];                
@@ -274,7 +270,7 @@ public class PopulationQuery {
                 
                 
                 //saving query results
-                File Testfile = new File("QerryResults.txt");
+                File Testfile = new File("QerryResults" + version.getVersion() + ".txt");
                 try {
                     Testfile.createNewFile();
 
@@ -287,6 +283,21 @@ public class PopulationQuery {
                             writer.write(String.valueOf(queries[i][0]) + " " + String.valueOf(queries[i][1]) + " " + String.valueOf(queries[i][2]) + " " + String.valueOf(queries[i][3]) +
                             " = # " + String.valueOf(querylist[i].population) + " % " + String.valueOf(querylist[i].percentage) +"\n");
                     }
+                    
+                    //Write additional time results into file
+                    //writer.write(version.getVersion() );
+                    writer.write(String.valueOf("Build Time = " + totalPreTime + "\n"));
+                    
+                    long totalTime = endTime - startTime + 1;
+                    System.out.println("Total querry time: " + totalTime + "s");
+                    long endTotalTime = Instant.now().getEpochSecond();                    
+                    long totalRunTime = endTotalTime - startTotalTime + 1;                    
+                    System.out.println("Total Run time: " + totalRunTime + "s");
+                    // get the number of processors available to the Java virtual machine
+                    Runtime runtime = Runtime.getRuntime();                                        
+                    int numberOfProcessors = runtime.availableProcessors();
+                    
+                    //done with the file
                     // Writes the content to the file
                     writer.flush();
                     writer.close();
@@ -294,7 +305,6 @@ public class PopulationQuery {
                         Logger.getLogger(PopulationQuery.class.getName()).log(Level.SEVERE, null, ex);
                     }
                 
-		long totalTime = endTime - startTime + 1;
-		System.out.println("Total querry time: " + totalTime + "s");
+		
 	}
 }

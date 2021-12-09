@@ -17,4 +17,8 @@ public class Version2 extends VersionObject {
 		QueryResult result = Query.query(_data, bounds, _grid_x, _grid_y, min_x, max_x, min_y, max_y);
 		return result;
 	}
+        public String getVersion()
+        {
+            return "Version2";
+        }
 }
