@@ -3,5 +3,12 @@ dist/
 *.jar
 *.class
 /nbproject/private/
-QerryTests.txt
-QerryResults.txt
+QueryTests.txt
+QueryResults.txt
+QueryResultsVersion1.txt
+QueryResultsVersion2.txt
+QueryResultsVersion3.txt
+QueryResultsVersion4.txt
+QueryResultsVersion5.txt
+MultiCoreProject.jar
+README.TXT

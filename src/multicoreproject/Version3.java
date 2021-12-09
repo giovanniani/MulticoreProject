@@ -56,7 +56,9 @@ public class Version3 extends VersionObject {
             QueryResult tempQuery = new QueryResult(0, 0);
             //now with the gripd updated, we run the query
             int topLeft = 0, topRight = 0, bottomLeft = 0, bottomRight = 0;
-            bottomRight = _updatedPopulationGrid[max_lat - 1][max_long - 1];
+            if(max_lat > 1 && max_long > 1)
+                bottomRight = _updatedPopulationGrid[max_lat - 1][max_long - 1];
+            
             if(min_long > 0 && min_lat > 0)
             {
                 bottomLeft = _updatedPopulationGrid[max_lat][min_long - 1];

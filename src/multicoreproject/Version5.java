@@ -52,5 +52,10 @@ public class Version5 extends VersionObject {
             if (min_x > 1 && min_y > 1)
                     pop += _grid[min_x - 2][min_y - 2].getValue();
             return new QueryResult(pop, ((float)100.0) * ((float)pop) / _total_pop);
-    }        
+    }
+    
+    public String getVersion()
+    {
+        return "Version5";
+    }
 }

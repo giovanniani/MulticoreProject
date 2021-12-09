@@ -186,12 +186,14 @@ public class PopulationQuery {
                 int[][] queries = new int[count][4];                
                 int min_x, min_y, max_x, max_y;
                 
+                
                 // creates the file
                 //Created the file with the querries
                 //left commented because we only needed this file to be generated once
                 //if a new file is needed un comment this section of code
+                
                 /*
-                File Testfile = new File("QerryTests.txt");
+                File Testfile = new File(file);
                 try {
                     Testfile.createNewFile();
 
@@ -270,33 +272,38 @@ public class PopulationQuery {
                 
                 
                 //saving query results
-                File Testfile = new File("QerryResults" + version.getVersion() + ".txt");
+                File TestfileResult = new File("QueryResults" + version.getVersion() + ".txt");
                 try {
-                    Testfile.createNewFile();
-
+                    TestfileResult.createNewFile();
+                    // get the number of processors available to the Java virtual machine
+                    Runtime runtime = Runtime.getRuntime();                                        
+                    int numberOfProcessors = runtime.availableProcessors();
                     // creates a FileWriter Object
                     FileWriter writer; 
-                    writer = new FileWriter(Testfile);                   
-                
+                    writer = new FileWriter(TestfileResult);                                       
                     for (int i = 0; i < count; ++i)
                     {                            
                             writer.write(String.valueOf(queries[i][0]) + " " + String.valueOf(queries[i][1]) + " " + String.valueOf(queries[i][2]) + " " + String.valueOf(queries[i][3]) +
                             " = # " + String.valueOf(querylist[i].population) + " % " + String.valueOf(querylist[i].percentage) +"\n");
                     }
-                    
+                    writer.flush();
+                    writer.close();
                     //Write additional time results into file
-                    //writer.write(version.getVersion() );
-                    writer.write(String.valueOf("Build Time = " + totalPreTime + "\n"));
-                    
+                    File TestfileResultTime = new File("Time-QueryResults" + version.getVersion() + "_"+ String.valueOf(count) + "_" + String.valueOf(numberOfProcessors) +".txt");
+                    writer = new FileWriter(TestfileResultTime);  
+                    writer.write(version.getVersion() + "\n");
+                    writer.write(String.valueOf("Build Time = " + totalPreTime + "s\n"));                    
+                    System.out.println("Total Build time: " + totalPreTime + "s");
                     long totalTime = endTime - startTime + 1;
-                    System.out.println("Total querry time: " + totalTime + "s");
+                    writer.write(String.valueOf("Query Time = " + totalTime + "s\n"));                    
+                    System.out.println("Total query time: " + totalTime + "s");
                     long endTotalTime = Instant.now().getEpochSecond();                    
                     long totalRunTime = endTotalTime - startTotalTime + 1;                    
                     System.out.println("Total Run time: " + totalRunTime + "s");
-                    // get the number of processors available to the Java virtual machine
-                    Runtime runtime = Runtime.getRuntime();                                        
-                    int numberOfProcessors = runtime.availableProcessors();
+                    writer.write(String.valueOf("Total run Time = " + totalRunTime + "s\n"));                                        
+                    writer.write("Number of queries: " + String.valueOf(count) + "\n");
                     
+                    writer.write("Number of cores: " + String.valueOf(numberOfProcessors) + "\n");
                     //done with the file
                     // Writes the content to the file
                     writer.flush();
