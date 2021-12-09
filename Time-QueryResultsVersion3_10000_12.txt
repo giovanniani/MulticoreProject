@@ -1,6 +1,6 @@
-Version2
+Version3
 Build Time = 2s
-Query Time = 7s
-Total run Time = 8s
+Query Time = 1s
+Total run Time = 2s
 Number of queries: 10000
 Number of cores: 12

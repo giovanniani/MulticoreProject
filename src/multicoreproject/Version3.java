@@ -145,8 +145,7 @@ public class Version3 extends VersionObject {
                     updatedGrid[i][j] = tempPopulationSize;
                 }
             }
-            this._updatedPopulationGrid = updatedGrid;
-            System.out.println(updatedGrid[updatedGrid.length - 1][updatedGrid[0].length - 1]);            
+            this._updatedPopulationGrid = updatedGrid;       
         }
         
         public String getVersion()
