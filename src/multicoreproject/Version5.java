@@ -39,8 +39,6 @@ public class Version5 extends VersionObject {
                         tmp2 = _grid[x - 1][y - 1].getValue();
                 }
                 _grid[x][y].updatePopulation(tmp0 + tmp1 - tmp2);
-		if (_grid[x][y].getValue() != 0)
-			System.out.println("grid[" + x + "][" + y + "]" + " = " + _grid[x][y].getValue());
             }
         }
     }
