@@ -28,9 +28,9 @@ public class Grid {
 	}
 
 	// Make an empty copy of this grid with all the same parameters
-	public Grid emptyCopy() {
-		return new Grid(_bounds, _grid_x, _grid_y);
-	}
+	// public Grid emptyCopy() {
+	//	return new Grid(_bounds, _grid_x, _grid_y);
+	//}
 
 	public void update(CensusGroup group) {
 		// Calculate x and y

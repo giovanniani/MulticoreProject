@@ -26,8 +26,6 @@ public class GridItem {
             // this.lock = true;
             population += populationSize;
             // this.lock = false;
-	    if (populationSize > 0)
-		    System.out.println("Locking with update populationSize = " + populationSize + ", population = " + population);
 	}
     }
     
@@ -39,7 +37,9 @@ public class GridItem {
 */
     public int getValue()
     {
-        return this.population;
+	synchronized (lock) {
+            return this.population;
+	}
     }
             
 }
