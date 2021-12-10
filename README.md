@@ -4,20 +4,20 @@
 
 _Giovanni Villalobos, Jacob Tronge_
 
-Test Results for the different versions
+Below are test results for testing each version on two different computers.
 
 ### Query Time Benchmarks
 
 Below are the query time results for running 1000, 10000, 100000 and 1000000
 random queries for each of the five versions.
 
-![query time versus version 1000](figures/QueryTimeVersion_1000.png)
+![Total time for 1000 queries](figures/QueryTimeVersion_1000.png)
 
-![query time versus version 10000](figures/QueryTimeVersion_10000.png)
+![Total time for 10000 queries](figures/QueryTimeVersion_10000.png)
 
-![query time versus version 100000](figures/QueryTimeVersion_100000.png)
+![Total time for 100000 queries](figures/QueryTimeVersion_100000.png)
 
-![query time versus version 1000000](figures/QueryTimeVersion_1000000.png)
+![Total time for 1000000 queries](figures/QueryTimeVersion_1000000.png)
 
 Our evaluation was done on two different computers, one with 12 cores and one
 with 16 cores. You can see a small amount of speedup for the computer with 16
